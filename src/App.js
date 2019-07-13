@@ -1,6 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+import Login from "./Login";
+import Expense from "./Expense";
+
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
+const GET_USERS = gql`
+  {
+    users {
+      id
+      username
+    }
+  }
+`;
+
+const Users = () => (
+  <Query query={GET_USERS}>
+    {({ data }) => {
+      console.log("data", data);
+      return <div>My Profile</div>;
+    }}
+  </Query>
+);
 
 function App() {
   return (
@@ -18,6 +42,9 @@ function App() {
         >
           Learn React
         </a>
+        <Login />
+        <Users />
+        <Expense />
       </header>
     </div>
   );
