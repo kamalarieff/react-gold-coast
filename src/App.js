@@ -1,52 +1,89 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+import Home from "./Home";
 import Login from "./Login";
-import Expense from "./Expense";
 
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
+import { ApolloConsumer } from "react-apollo";
 
-const GET_USERS = gql`
-  {
-    users {
-      id
-      username
-    }
+const ProtectedRoute = ({ component: Component, ...rest }) => {
+  console.log("rest", rest);
+  return (
+    <ApolloConsumer>
+      {client => {
+        console.log("client", client);
+        return (
+          <Route
+            {...rest}
+            render={props => {
+              console.log("props", props);
+              return <Component {...props} />;
+            }}
+          />
+        );
+      }}
+    </ApolloConsumer>
+  );
+};
+
+const fakeAuth = {
+  isAuthenticated: false,
+  authenticate(cb) {
+    this.isAuthenticated = true;
+    setTimeout(cb, 100); // fake async
+  },
+  signout(cb) {
+    this.isAuthenticated = false;
+    setTimeout(cb, 100);
   }
-`;
+};
 
-const Users = () => (
-  <Query query={GET_USERS}>
-    {({ data }) => {
-      console.log("data", data);
-      return <div>My Profile</div>;
-    }}
-  </Query>
-);
+function PrivateRoute({ component: Component, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        fakeAuth.isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Login />
-        <Users />
-        <Expense />
-      </header>
-    </div>
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/protected">Protected</Link>
+            </li>
+          </ul>
+        </nav>
+        <ProtectedRoute path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        {/* <PrivateRoute path="/protected" component={Home} /> */}
+      </div>
+    </Router>
   );
 }
 
