@@ -13,7 +13,7 @@ import gql from "graphql-tag";
 const httpLink = new HttpLink({
   uri: "http://localhost:8000/graphql",
   headers: {
-    "x-token": localStorage.getItem("token")
+    "x-token": localStorage.getItem("token") || ""
   }
 });
 
@@ -21,7 +21,7 @@ const cache = new InMemoryCache();
 
 cache.writeData({
   data: {
-    isLoggedIn: false
+    isLoggedIn: localStorage.getItem("token") ? true : false
   }
 });
 
