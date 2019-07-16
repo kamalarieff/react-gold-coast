@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Redirect
+  Redirect,
+  Switch
 } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
@@ -56,8 +57,10 @@ function App() {
             </li>
           </ul>
         </nav>
-        <ProtectedRoute exact path="/" component={Home} />
-        <Route path="/login" component={Login} />
+        <Switch>
+          <ProtectedRoute exact path="/" component={Home} />
+          <Route path="/login" component={Login} />
+        </Switch>
       </div>
     </Router>
   );
