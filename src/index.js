@@ -8,6 +8,7 @@ import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import gql from "graphql-tag";
 
 const httpLink = new HttpLink({
   uri: "http://localhost:8000/graphql",
@@ -18,9 +19,40 @@ const httpLink = new HttpLink({
 
 const cache = new InMemoryCache();
 
+cache.writeData({
+  data: {
+    isLoggedIn: false
+  }
+});
+
 const client = new ApolloClient({
   link: httpLink,
-  cache
+  cache,
+  resolvers: {
+    Query: {
+      users: (_root, variables, { cache, getCacheKey }) => {
+        const temp = gql`
+          {
+            users {
+              id
+            }
+          }
+        `;
+        // console.log("TCL: getCacheKey", getCacheKey);
+        // console.log("TCL: cache", cache.readQuery({ query: temp }));
+        // console.log("TCL: variables", variables);
+        // console.log("TCL: _root", _root);
+        // return null;
+      },
+      isLoggedIn: (_root, variables, { cache, getCacheKey }) => {
+        console.log("TCL: getCacheKey", getCacheKey);
+        console.log("TCL: cache", cache);
+        console.log("TCL: variables", variables);
+        console.log("TCL: _root", _root);
+        return null;
+      }
+    }
+  }
 });
 
 ReactDOM.render(

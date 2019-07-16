@@ -8,59 +8,39 @@ import {
 import Home from "./Home";
 import Login from "./Login";
 
-import { ApolloConsumer } from "react-apollo";
+import { Query } from "react-apollo";
+
+import gql from "graphql-tag";
+
+const GET_LOGGED_IN_STATUS = gql`
+  {
+    isLoggedIn @client
+  }
+`;
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-  console.log("rest", rest);
   return (
-    <ApolloConsumer>
-      {client => {
-        console.log("client", client);
-        return (
-          <Route
-            {...rest}
-            render={props => {
-              console.log("props", props);
-              return <Component {...props} />;
-            }}
-          />
-        );
-      }}
-    </ApolloConsumer>
+    <Query query={GET_LOGGED_IN_STATUS}>
+      {({ data: { isLoggedIn } }) => (
+        <Route
+          {...rest}
+          render={props =>
+            isLoggedIn ? (
+              <Component {...props} />
+            ) : (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                  state: { from: props.location }
+                }}
+              />
+            )
+          }
+        />
+      )}
+    </Query>
   );
 };
-
-const fakeAuth = {
-  isAuthenticated: false,
-  authenticate(cb) {
-    this.isAuthenticated = true;
-    setTimeout(cb, 100); // fake async
-  },
-  signout(cb) {
-    this.isAuthenticated = false;
-    setTimeout(cb, 100);
-  }
-};
-
-function PrivateRoute({ component: Component, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        fakeAuth.isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    />
-  );
-}
 
 function App() {
   return (
@@ -74,14 +54,10 @@ function App() {
             <li>
               <Link to="/login">Login</Link>
             </li>
-            <li>
-              <Link to="/protected">Protected</Link>
-            </li>
           </ul>
         </nav>
-        <ProtectedRoute path="/" component={Home} />
+        <ProtectedRoute exact path="/" component={Home} />
         <Route path="/login" component={Login} />
-        {/* <PrivateRoute path="/protected" component={Home} /> */}
       </div>
     </Router>
   );
