@@ -1,36 +1,22 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import Users from "./User";
+import styled from "@emotion/styled";
 
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-
-const GET_USERS = gql`
-  {
-    users {
-      id
-      username
-      purchaseFlightTicket
-    }
-  }
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  max-width: 90em;
+  margin: 0 auto;
+  justify-content: center;
+  grid-gap: 1em;
 `;
-
-const Users = () => (
-  <Query query={GET_USERS}>
-    {({ data, loading, error }) => (
-      <>
-        {!loading &&
-          data.users.map(user => <span key={user.id}>{user.username}</span>)}
-      </>
-    )}
-  </Query>
-);
 
 function Home() {
   return (
-    <div className="App">
+    <Container>
       <Users />
-    </div>
+    </Container>
   );
 }
 
