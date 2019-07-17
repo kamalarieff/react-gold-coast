@@ -100,7 +100,7 @@ const Itenary = () => (
     <CardContent>
       <Table>
         {itenaryData.map(itenary => (
-          <>
+          <React.Fragment key={itenary.date}>
             <TableHeader date={itenary.date} day={itenary.day} />
             <TableBody>
               <ActivityTable>
@@ -112,7 +112,7 @@ const Itenary = () => (
                 </TableBody>
               </ActivityTable>
             </TableBody>
-          </>
+          </React.Fragment>
         ))}
       </Table>
     </CardContent>
