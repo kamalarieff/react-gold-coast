@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import Users from "./User";
+import Itenary from "./Itenary";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -10,12 +11,14 @@ const Container = styled.div`
   margin: 0 auto;
   justify-content: center;
   grid-gap: 1em;
+  padding: 1em;
 `;
 
 function Home() {
   return (
     <Container>
       <Users />
+      <Itenary />
     </Container>
   );
 }

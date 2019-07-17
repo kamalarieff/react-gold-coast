@@ -27,7 +27,9 @@ const IconStyled = styled(Icon)`
   vertical-align: middle;
 `;
 
-const UserCard = styled(Card)``;
+const UserCard = styled(Card)`
+  height: fit-content;
+`;
 
 const UserHeader = () => (
   <ListItem>
