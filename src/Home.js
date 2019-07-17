@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import Users from "./User";
 import Itenary from "./Itenary";
+import Budget from "./Budget";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -19,6 +20,7 @@ function Home() {
     <Container>
       <Users />
       <Itenary />
+      <Budget />
     </Container>
   );
 }
