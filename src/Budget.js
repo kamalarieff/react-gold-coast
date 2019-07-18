@@ -1,8 +1,4 @@
 import React from "react";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -10,6 +6,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import * as R from "ramda";
 import styled from "@emotion/styled";
+import Card from "./hoc/Card";
 
 const budget = [
   {
@@ -97,9 +94,9 @@ const TotalRow = () => (
 );
 
 const Budget = () => (
-  <BudgetCard>
-    <CardHeader title={<Typography variant="h5">Budget</Typography>} />
-    <CardContent>
+  <Card
+    title="Budget"
+    render={() => (
       <Table>
         <TableHeader />
         <TableBody>
@@ -112,8 +109,8 @@ const Budget = () => (
           <TotalRow />
         </TableBody>
       </Table>
-    </CardContent>
-  </BudgetCard>
+    )}
+  />
 );
 
 export default Budget;
