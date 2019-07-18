@@ -3,6 +3,7 @@ import "./App.css";
 import Users from "./User";
 import Itenary from "./Itenary";
 import Budget from "./Budget";
+import { ExpenseCard as Expenses } from "./Expense";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -21,6 +22,7 @@ function Home() {
       <Users />
       <Itenary />
       <Budget />
+      <Expenses />
     </Container>
   );
 }
