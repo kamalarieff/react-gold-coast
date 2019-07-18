@@ -11,7 +11,10 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import gql from "graphql-tag";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:8000/graphql",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://graphql-goldcoast.herokuapp.com/graphql"
+      : "http://localhost:8000/graphql",
   headers: {
     "x-token": localStorage.getItem("token") || ""
   }
