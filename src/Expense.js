@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 import { Mutation } from "react-apollo";
 import { DateTime } from "luxon";
 import Card from "./hoc/Card";
-
-const item = "jonathan";
-const value = 20.0;
 
 const ADD_EXPENSE = gql`
   mutation($item: String!, $value: Float!) {
@@ -39,15 +42,43 @@ const GET_EXPENSES = gql`
 `;
 
 const Expense = () => {
+  const [item, setItem] = useState("");
+  const [value, setValue] = useState("");
+
   return (
-    <Mutation mutation={ADD_EXPENSE} variables={{ item, value }}>
+    <Mutation
+      mutation={ADD_EXPENSE}
+      variables={{ item, value }}
+      refetchQueries={[
+        {
+          query: GET_EXPENSES
+        }
+      ]}
+    >
       {(addExpense, { data, loading, error }) => (
-        <>
-          <Button variant="contained" color="primary" onClick={addExpense}>
-            Add Expense
-          </Button>
+        <Container>
+          <form noValidate autoComplete="off">
+            <TextField
+              label="Item"
+              margin="normal"
+              variant="outlined"
+              value={item}
+              onChange={e => setItem(e.target.value)}
+            />
+            <TextField
+              label="Value"
+              type="number"
+              margin="normal"
+              variant="outlined"
+              value={value}
+              onChange={e => setValue(parseFloat(e.target.value))}
+            />
+            <Button variant="contained" color="primary" onClick={addExpense}>
+              Add Expense
+            </Button>
+          </form>
           {error && <p>Error</p>}
-        </>
+        </Container>
       )}
     </Mutation>
   );
@@ -106,5 +137,23 @@ export const ExpenseCard = () => (
     )}
   </Query>
 );
+
+const useStyles = makeStyles({
+  root: {
+    maxWidth: "90em",
+    margin: "0 auto"
+  }
+});
+
+export const ExpensePage = () => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Expense />
+      <ExpenseCard />
+    </div>
+  );
+};
 
 export default Expense;

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
+import { ExpensePage } from "./Expense";
 
 import { Query } from "react-apollo";
 
@@ -55,10 +56,14 @@ function App() {
             <li>
               <Link to="/login">Login</Link>
             </li>
+            <li>
+              <Link to="/expenses">Expenses</Link>
+            </li>
           </ul>
         </nav>
         <Switch>
           <ProtectedRoute exact path="/" component={Home} />
+          <ProtectedRoute path="/expenses" component={ExpensePage} />
           <Route path="/login" component={Login} />
         </Switch>
       </div>
