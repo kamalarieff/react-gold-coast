@@ -37,6 +37,9 @@ const GET_EXPENSES = gql`
       sharedWith
       currency
       createdAt
+      user {
+        username
+      }
     }
   }
 `;
@@ -97,6 +100,9 @@ export const ExpenseCard = () => (
                   <Typography variant="body1">Time</Typography>
                 </TableCell>
                 <TableCell>
+                  <Typography variant="body1">User</Typography>
+                </TableCell>
+                <TableCell>
                   <Typography variant="body1">Item</Typography>
                 </TableCell>
                 <TableCell>
@@ -114,6 +120,11 @@ export const ExpenseCard = () => (
                           {DateTime.fromISO(expense.createdAt).toFormat(
                             "dd LLL hh:mm a"
                           )}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {expense.user.username}
                         </Typography>
                       </TableCell>
                       <TableCell>
