@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
+import Header from "./Header";
 import { ExpensePage } from "./Expense";
 
 import { Query } from "react-apollo";
@@ -48,19 +49,7 @@ function App() {
   return (
     <Router>
       <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/expenses">Expenses</Link>
-            </li>
-          </ul>
-        </nav>
+        <Header />
         <Switch>
           <ProtectedRoute exact path="/" component={Home} />
           <ProtectedRoute path="/expenses" component={ExpensePage} />
