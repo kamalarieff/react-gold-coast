@@ -9,6 +9,7 @@ import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { CachePersistor } from "apollo-cache-persist";
 import gql from "graphql-tag";
 
 const httpLink = new createHttpLink({
@@ -31,26 +32,35 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const cache = new InMemoryCache();
-
+const persistor = new CachePersistor({
+  cache,
+  storage: window.sessionStorage,
+  debug: true
+});
 cache.writeData({
   data: {
     isLoggedIn: localStorage.getItem("token") ? true : false
   }
 });
-
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache,
   resolvers: {
+    MyExpenses: {
+      getMyExpenses: (_root, variables, { cache }) => {
+        console.log("in here4");
+        return null;
+      }
+    },
     Query: {
       users: (_root, variables, { cache, getCacheKey }) => {
-        const temp = gql`
-          {
-            users {
-              id
-            }
-          }
-        `;
+        // const temp = gql`
+        //   {
+        //     users {
+        //       id
+        //     }
+        //   }
+        // `;
         // console.log("TCL: getCacheKey", getCacheKey);
         // console.log("TCL: cache", cache.readQuery({ query: temp }));
         // console.log("TCL: variables", variables);
@@ -63,15 +73,71 @@ const client = new ApolloClient({
         console.log("TCL: variables", variables);
         console.log("TCL: _root", _root);
         return null;
+      },
+      getMyExpenses: (_root, variables, { cache }) => {
+        console.log("in here2");
+
+        const { expenses } = cache.readQuery({
+          query: gql`
+            query {
+              expenses {
+                id
+                item
+              }
+            }
+          `
+        });
+        return expenses;
       }
     }
   }
 });
 
+// persistCache({
+//   cache,
+//   storage: window.localStorage,
+//   debug: true
+// }).then(() => {
+//   ReactDOM.render(
+//     <ApolloProvider client={client}>
+//       <App />
+//     </ApolloProvider>,
+//     document.getElementById("root")
+//   );
+// });
+
+class Root extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      restored: false
+    };
+  }
+
+  componentDidMount() {
+    persistor.restore().then(() => this.setState({ restored: true }));
+  }
+
+  render() {
+    let content = null;
+    if (!this.state.restored) {
+      content = <div>Loading!!!</div>;
+    } else {
+      content = (
+        <ApolloProvider client={client}>{this.props.children}</ApolloProvider>
+      );
+    }
+
+    return content;
+  }
+}
 ReactDOM.render(
-  <ApolloProvider client={client}>
+  <Root>
     <App />
-  </ApolloProvider>,
+  </Root>,
+  // <ApolloProvider client={client}>
+  //   <App />
+  // </ApolloProvider>,
   document.getElementById("root")
 );
 
