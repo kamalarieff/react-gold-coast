@@ -44,7 +44,7 @@ const Login = props => {
           client.writeData({
             data: {
               isLoggedIn: true,
-              me: { id: signIn.id, username: signIn.username }
+              me: { id: signIn.id, username: signIn.username, __typename: "Me" }
             }
           });
           props.history.push("/");
