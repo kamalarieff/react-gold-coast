@@ -37,11 +37,13 @@ const persistor = new CachePersistor({
   storage: window.sessionStorage,
   debug: true
 });
-cache.writeData({
-  data: {
-    isLoggedIn: localStorage.getItem("token") ? true : false
-  }
-});
+
+// cache.writeData({
+//   data: {
+//     isLoggedIn: localStorage.getItem("token") ? true : false
+//   }
+// });
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache,
