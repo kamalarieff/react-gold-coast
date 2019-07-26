@@ -14,6 +14,8 @@ const Container = styled.div`
 const LOGIN = gql`
   mutation($username: String!) {
     signIn(username: $username) {
+      id
+      username
       token
     }
   }
@@ -37,9 +39,14 @@ const Login = props => {
       <Mutation
         mutation={LOGIN}
         variables={{ username }}
-        update={(client, { data }) => {
-          localStorage.setItem("token", data.signIn.token);
-          client.writeData({ data: { isLoggedIn: true } });
+        update={(client, { data: { signIn } }) => {
+          localStorage.setItem("token", signIn.token);
+          client.writeData({
+            data: {
+              isLoggedIn: true,
+              me: { id: signIn.id, username: signIn.username }
+            }
+          });
           props.history.push("/");
         }}
         //   onCompleted={({ signIn: { token } }) => {
