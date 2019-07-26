@@ -5,7 +5,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import * as R from "ramda";
-import styled from "@emotion/styled";
 import Card from "./hoc/Card";
 
 const budget = [
@@ -72,10 +71,6 @@ const calculateTotal = R.pipe(
 );
 
 const budgetInRM = covertToRM(budget);
-
-const BudgetCard = styled(Card)`
-  height: fit-content;
-`;
 
 const TableHeader = () => (
   <TableHead>
