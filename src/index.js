@@ -76,20 +76,42 @@ const client = new ApolloClient({
         console.log("TCL: _root", _root);
         return null;
       },
-      getMyExpenses: (_root, variables, { cache }) => {
+      MyExpenses: (_root, _, { cache }) => {
         console.log("in here2");
 
-        const { expenses } = cache.readQuery({
-          query: gql`
-            query {
-              expenses {
-                id
-                item
+        try {
+          const { me } = cache.readQuery({
+            query: gql`
+              query {
+                me {
+                  id
+                  username
+                }
               }
-            }
-          `
-        });
-        return expenses;
+            `
+          });
+          const { expenses } = cache.readQuery({
+            query: gql`
+              query {
+                expenses {
+                  id
+                  item
+                  value
+                  sharedWith
+                  currency
+                  createdAt
+                  user {
+                    id
+                    username
+                  }
+                }
+              }
+            `
+          });
+          return expenses.filter(expense => expense.user.id === me.id);
+        } catch (e) {
+          console.log("TCL: e", e);
+        }
       }
     }
   }
