@@ -54,6 +54,21 @@ const client = new ApolloClient({
         return null;
       }
     },
+    Mutation: {
+      addExpense: (_root, _, { cache }) => {
+        const { me } = cache.readQuery({
+          query: gql`
+            {
+              me {
+                id
+                username
+              }
+            }
+          `
+        });
+        return { user: me };
+      }
+    },
     Query: {
       users: (_root, variables, { cache, getCacheKey }) => {
         // const temp = gql`

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Query } from "react-apollo";
+import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -11,7 +11,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
-import { Mutation } from "react-apollo";
 import { DateTime } from "luxon";
 import Card from "./hoc/Card";
 
@@ -21,6 +20,13 @@ const ADD_EXPENSE = gql`
       id
       item
       value
+      sharedWith
+      currency
+      createdAt
+      user @client {
+        id
+        username
+      }
     }
   }
 `;
@@ -66,10 +72,24 @@ const Expense = () => {
       refetchQueries={[
         {
           query: GET_EXPENSES
+        },
+        {
+          query: GET_MY_EXPENSES
         }
       ]}
+      update={(cache, { data: { addExpense } }) => {
+        const { expenses } = cache.readQuery({
+          query: GET_EXPENSES
+        });
+        expenses.push(addExpense);
+
+        cache.writeQuery({
+          query: GET_EXPENSES,
+          data: { expenses }
+        });
+      }}
     >
-      {(addExpense, { data, loading, error }) => (
+      {(addExpense, { loading, error }) => (
         <Container>
           <form noValidate autoComplete="off">
             <TextField
@@ -173,8 +193,7 @@ const useStyles = makeStyles({
 
 const MyExpenses = () => (
   <Query query={GET_MY_EXPENSES} displayName="Singsing">
-    {({ data, loading, error, refetch }) => {
-      console.log("TCL: MyExpenses -> data", data);
+    {({ data, loading, error }) => {
       return error ? (
         <div>Error: {error}</div>
       ) : (
