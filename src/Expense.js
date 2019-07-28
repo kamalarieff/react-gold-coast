@@ -11,12 +11,15 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 import { DateTime } from "luxon";
 import Card from "./hoc/Card";
 
 const ADD_EXPENSE = gql`
-  mutation($item: String!, $value: Float!) {
-    addExpense(item: $item, value: $value) {
+  mutation($item: String!, $value: Float!, $currency: String!) {
+    addExpense(item: $item, value: $value, currency: $currency) {
       id
       item
       value
@@ -64,11 +67,12 @@ const GET_MY_EXPENSES = gql`
 const Expense = () => {
   const [item, setItem] = useState("");
   const [value, setValue] = useState("");
+  const [currency, setCurrency] = useState("RM");
 
   return (
     <Mutation
       mutation={ADD_EXPENSE}
-      variables={{ item, value }}
+      variables={{ item, value, currency }}
       refetchQueries={[
         {
           query: GET_EXPENSES
@@ -99,6 +103,14 @@ const Expense = () => {
               value={item}
               onChange={e => setItem(e.target.value)}
             />
+            <Select
+              value={currency}
+              onChange={e => setCurrency(e.target.value)}
+              input={<OutlinedInput />}
+            >
+              <MenuItem value={"RM"}>RM</MenuItem>
+              <MenuItem value={"AUD"}>AUD</MenuItem>
+            </Select>
             <TextField
               label="Value"
               type="number"
