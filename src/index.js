@@ -48,12 +48,6 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache,
   resolvers: {
-    MyExpenses: {
-      getMyExpenses: (_root, variables, { cache }) => {
-        console.log("in here4");
-        return null;
-      }
-    },
     Mutation: {
       addExpense: (_root, _, { cache }) => {
         const { me } = cache.readQuery({
@@ -92,8 +86,6 @@ const client = new ApolloClient({
         return null;
       },
       MyExpenses: (_root, _, { cache }) => {
-        console.log("in here2");
-
         try {
           const { me } = cache.readQuery({
             query: gql`
@@ -112,7 +104,6 @@ const client = new ApolloClient({
                   id
                   item
                   value
-                  sharedWith
                   currency
                   createdAt
                   user {
