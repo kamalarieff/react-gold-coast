@@ -28,7 +28,10 @@ const ADD_EXPENSE = gql`
       id
       item
       value
-      sharedWith
+      sharedWith {
+        id
+        username
+      }
       currency
       createdAt
       user @client {
@@ -45,7 +48,6 @@ const GET_EXPENSES = gql`
       id
       item
       value
-      sharedWith
       currency
       createdAt
       user {
@@ -62,7 +64,6 @@ const GET_MY_EXPENSES = gql`
       id
       item
       value
-      sharedWith
       currency
       createdAt
     }
@@ -121,7 +122,7 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
     <Query
       query={gql`
         {
-          users @client {
+          users {
             id
             username
           }
@@ -130,7 +131,7 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
     >
       {({ data, loading, error }) => {
         return (
-          <FormGroup>
+          <FormGroup row>
             {data.users.map(user => (
               <FormControlLabel
                 key={user.id}

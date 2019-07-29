@@ -1,6 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import styled from "@emotion/styled";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Table from "@material-ui/core/Table";
@@ -18,7 +19,10 @@ const GET_EXPENSES = gql`
       id
       item
       value
-      sharedWith
+      sharedWith {
+        id
+        username
+      }
       currency
       createdAt
       user {
@@ -35,7 +39,6 @@ const GET_MY_EXPENSES = gql`
       id
       item
       value
-      sharedWith
       currency
       createdAt
     }
@@ -56,6 +59,9 @@ export const ExpenseCard = () => (
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1">User</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body1">Shared With</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="body1">Item</Typography>
@@ -81,6 +87,13 @@ export const ExpenseCard = () => (
                         <Typography variant="body1">
                           {expense.user.username}
                         </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {expense.sharedWith.map(user => (
+                          <Typography key={user.id} variant="body1">
+                            {user.username}
+                          </Typography>
+                        ))}
                       </TableCell>
                       <TableCell>
                         <Typography variant="body1">{expense.item}</Typography>
@@ -175,6 +188,11 @@ const MyExpenses = () => (
   </Query>
 );
 
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
 export const ExpensePage = () => {
   const classes = useStyles();
 
@@ -182,8 +200,10 @@ export const ExpensePage = () => {
     <div className={classes.root}>
       {/* <The_query_call /> */}
       <ExpenseAdd />
-      <MyExpenses />
-      <ExpenseCard />
+      <Grid>
+        <MyExpenses />
+        <ExpenseCard />
+      </Grid>
     </div>
   );
 };
