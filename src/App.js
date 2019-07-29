@@ -8,7 +8,7 @@ import {
 import Home from "./Home";
 import Login from "./Login";
 import Header from "./Header";
-import { ExpensePage } from "./Expense";
+import { ExpensePage } from "./components/Expense";
 
 import { Query } from "react-apollo";
 

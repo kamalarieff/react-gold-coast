@@ -1,38 +1,16 @@
-import React, { useState } from "react";
-import { Query, Mutation } from "react-apollo";
+import React from "react";
+import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
 import { DateTime } from "luxon";
-import Card from "./hoc/Card";
-
-const ADD_EXPENSE = gql`
-  mutation($item: String!, $value: Float!, $currency: String!) {
-    addExpense(item: $item, value: $value, currency: $currency) {
-      id
-      item
-      value
-      sharedWith
-      currency
-      createdAt
-      user @client {
-        id
-        username
-      }
-    }
-  }
-`;
+import Card from "../hoc/Card";
+import ExpenseAdd from "./Add";
 
 const GET_EXPENSES = gql`
   {
@@ -63,72 +41,6 @@ const GET_MY_EXPENSES = gql`
     }
   }
 `;
-
-const Expense = () => {
-  const [item, setItem] = useState("");
-  const [value, setValue] = useState("");
-  const [currency, setCurrency] = useState("RM");
-
-  return (
-    <Mutation
-      mutation={ADD_EXPENSE}
-      variables={{ item, value, currency }}
-      refetchQueries={[
-        {
-          query: GET_EXPENSES
-        },
-        {
-          query: GET_MY_EXPENSES
-        }
-      ]}
-      update={(cache, { data: { addExpense } }) => {
-        const { expenses } = cache.readQuery({
-          query: GET_EXPENSES
-        });
-        expenses.push(addExpense);
-
-        cache.writeQuery({
-          query: GET_EXPENSES,
-          data: { expenses }
-        });
-      }}
-    >
-      {(addExpense, { loading, error }) => (
-        <Container>
-          <form noValidate autoComplete="off">
-            <TextField
-              label="Item"
-              margin="normal"
-              variant="outlined"
-              value={item}
-              onChange={e => setItem(e.target.value)}
-            />
-            <Select
-              value={currency}
-              onChange={e => setCurrency(e.target.value)}
-              input={<OutlinedInput />}
-            >
-              <MenuItem value={"RM"}>RM</MenuItem>
-              <MenuItem value={"AUD"}>AUD</MenuItem>
-            </Select>
-            <TextField
-              label="Value"
-              type="number"
-              margin="normal"
-              variant="outlined"
-              value={value}
-              onChange={e => setValue(parseFloat(e.target.value))}
-            />
-            <Button variant="contained" color="primary" onClick={addExpense}>
-              Add Expense
-            </Button>
-          </form>
-          {error && <p>Error</p>}
-        </Container>
-      )}
-    </Mutation>
-  );
-};
 
 export const ExpenseCard = () => (
   <Query query={GET_EXPENSES}>
@@ -268,11 +180,10 @@ export const ExpensePage = () => {
 
   return (
     <div className={classes.root}>
-      <Expense />
+      {/* <The_query_call /> */}
+      <ExpenseAdd />
       <MyExpenses />
       <ExpenseCard />
     </div>
   );
 };
-
-export default Expense;
