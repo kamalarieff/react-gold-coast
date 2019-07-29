@@ -106,6 +106,10 @@ const client = new ApolloClient({
                   value
                   currency
                   createdAt
+                  sharedWith {
+                    id
+                    username
+                  }
                   user {
                     id
                     username

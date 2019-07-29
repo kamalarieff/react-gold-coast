@@ -41,6 +41,10 @@ const GET_MY_EXPENSES = gql`
       value
       currency
       createdAt
+      sharedWith {
+        id
+        username
+      }
     }
   }
 `;
@@ -136,6 +140,7 @@ const MyExpenses = () => (
         <div>Error: {error}</div>
       ) : (
         <Card
+          overflow
           title="My Expenses"
           render={() => (
             <Table>
@@ -143,6 +148,9 @@ const MyExpenses = () => (
                 <TableRow>
                   <TableCell>
                     <Typography variant="body1">Time</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1">Shared With</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body1">Item</Typography>
@@ -163,6 +171,13 @@ const MyExpenses = () => (
                               "dd LLL hh:mm a"
                             )}
                           </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {expense.sharedWith.map(user => (
+                            <Typography key={user.id} variant="body1">
+                              {user.username}
+                            </Typography>
+                          ))}
                         </TableCell>
                         <TableCell>
                           <Typography variant="body1">
