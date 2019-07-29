@@ -7,12 +7,13 @@ import styled from "@emotion/styled";
 
 const Container = styled(Card)`
   height: fit-content;
-  grid-column: ${props => `span ${props.span}` || "unset"};
+  grid-column: ${props => (props.span ? `span ${props.span}` : "unset")};
+  overflow-x: ${props => (props.overflow ? "auto" : "")};
 `;
 
-const CustomCard = ({ render, title, span, action }) => {
+const CustomCard = ({ render, title, action, ...props }) => {
   return (
-    <Container span={span}>
+    <Container {...props}>
       <CardHeader
         title={<Typography variant="h5">{title}</Typography>}
         action={action ? action : ""}

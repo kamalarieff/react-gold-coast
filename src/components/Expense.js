@@ -49,6 +49,7 @@ export const ExpenseCard = () => (
   <Query query={GET_EXPENSES}>
     {({ data, loading, error }) => (
       <Card
+        overflow
         title="Expenses"
         render={() => (
           <Table>
@@ -200,10 +201,8 @@ export const ExpensePage = () => {
     <div className={classes.root}>
       {/* <The_query_call /> */}
       <ExpenseAdd />
-      <Grid>
-        <MyExpenses />
-        <ExpenseCard />
-      </Grid>
+      <MyExpenses />
+      <ExpenseCard />
     </div>
   );
 };
