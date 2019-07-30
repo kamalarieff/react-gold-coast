@@ -174,7 +174,9 @@ const MyExpenses = () => (
                               item: expense.item,
                               value: expense.value,
                               currency: expense.currency,
-                              sharedWith: expense.sharedWith
+                              sharedWith: expense.sharedWith.map(user =>
+                                parseInt(user.id)
+                              )
                             }}
                           />
                         </TableCell>
