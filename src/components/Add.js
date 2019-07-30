@@ -13,6 +13,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import styled from "@emotion/styled";
+import * as R from "ramda";
 
 const ADD_EXPENSE = gql`
   mutation(
@@ -142,15 +143,16 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
             }
           `
         });
-        const newData = data.users.filter(user => user.id !== me.id);
+        const usersWithoutMe = data.users.filter(user => user.id !== me.id);
+
         return (
           <FormGroup row>
-            {newData.map(user => (
+            {usersWithoutMe.map(user => (
               <FormControlLabel
                 key={user.id}
                 control={
                   <Checkbox
-                    // checked={state.checkedA}
+                    checked={R.includes(user, sharedWith)}
                     onChange={handleSharedWithChange(parseInt(user.id))}
                     value={user.id}
                     inputProps={{
@@ -248,6 +250,39 @@ const Add = () => {
             />
           )}
         </Mutation>
+      </form>
+    </Container>
+  );
+};
+
+export const Form = ({
+  children,
+  curItem,
+  curValue,
+  curCurrency,
+  curSharedWith
+}) => {
+  const [item, setItem] = useState(curItem || "");
+  const [value, setValue] = useState(curValue || "");
+  const [currency, setCurrency] = useState(curCurrency || "RM");
+  const [sharedWith, setSharedWith] = useState(curSharedWith || []);
+
+  const classes = useStyles();
+
+  return (
+    <Container className={classes.root}>
+      <form
+        noValidate
+        autoComplete="off"
+        style={{ display: "flex", flexDirection: "column" }}
+      >
+        <ItemTextField item={item} changeHandler={setItem} />
+        <ValueContainer>
+          <CurrencySelector currency={currency} changeHandler={setCurrency} />
+          <ValueTextField value={value} changeHandler={setValue} />
+        </ValueContainer>
+        <UsersCheckbox sharedWith={sharedWith} changeHandler={setSharedWith} />
+        {children({ item, value, currency, sharedWith })}
       </form>
     </Container>
   );

@@ -12,6 +12,7 @@ import TableRow from "@material-ui/core/TableRow";
 import { DateTime } from "luxon";
 import Card from "../hoc/Card";
 import ExpenseAdd from "./Add";
+import ExpenseUpdate, { UpdateProvider, UpdateButton } from "./Update";
 
 const GET_EXPENSES = gql`
   {
@@ -166,6 +167,17 @@ const MyExpenses = () => (
                     <TableBody>
                       <TableRow>
                         <TableCell>
+                          <UpdateButton
+                            id={expense.id}
+                            formValues={{
+                              item: expense.item,
+                              value: expense.value,
+                              currency: expense.currency,
+                              sharedWith: expense.sharedWith
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>
                           <Typography variant="body1">
                             {DateTime.fromISO(expense.createdAt).toFormat(
                               "dd LLL hh:mm a"
@@ -213,11 +225,13 @@ export const ExpensePage = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      {/* <The_query_call /> */}
-      <ExpenseAdd />
-      <MyExpenses />
-      <ExpenseCard />
-    </div>
+    <UpdateProvider>
+      <div className={classes.root}>
+        <ExpenseUpdate />
+        <ExpenseAdd />
+        <MyExpenses />
+        <ExpenseCard />
+      </div>
+    </UpdateProvider>
   );
 };
