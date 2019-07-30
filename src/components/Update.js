@@ -159,7 +159,7 @@ const SubmitButton = React.memo(({ item, value, currency, sharedWith }) => {
 
         return (
           <Button variant="contained" color="primary" onClick={handleClick}>
-            Update button
+            Update expense
           </Button>
         );
       }}
