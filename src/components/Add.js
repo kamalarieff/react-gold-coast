@@ -13,7 +13,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import styled from "@emotion/styled";
-import * as R from "ramda";
 
 const ADD_EXPENSE = gql`
   mutation(
@@ -113,14 +112,13 @@ const ValueTextField = React.memo(({ value, changeHandler }) => {
 
 const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
   const handleSharedWithChange = id => event => {
-    const temp = sharedWith;
+    let res;
     if (event.target.checked) {
-      temp.push(id);
-      changeHandler(temp);
+      res = sharedWith.concat(id);
     } else {
-      const res = temp.filter(x => x !== id);
-      changeHandler(res);
+      res = sharedWith.filter(x => x !== id);
     }
+    changeHandler(res);
   };
   return (
     <Query
@@ -152,7 +150,7 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
                 key={user.id}
                 control={
                   <Checkbox
-                    // checked={R.includes(user, sharedWith)}
+                    checked={sharedWith.includes(parseInt(user.id))}
                     onChange={handleSharedWithChange(parseInt(user.id))}
                     value={user.id}
                     inputProps={{
