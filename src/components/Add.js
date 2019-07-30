@@ -152,7 +152,7 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
                 key={user.id}
                 control={
                   <Checkbox
-                    checked={R.includes(user, sharedWith)}
+                    // checked={R.includes(user, sharedWith)}
                     onChange={handleSharedWithChange(parseInt(user.id))}
                     value={user.id}
                     inputProps={{
