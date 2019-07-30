@@ -147,6 +147,7 @@ const MyExpenses = () => (
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell />
                   <TableCell>
                     <Typography variant="body1">Time</Typography>
                   </TableCell>
