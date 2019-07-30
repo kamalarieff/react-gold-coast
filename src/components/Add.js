@@ -191,8 +191,8 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     maxWidth: "30em",
-    marginLeft: "auto",
-    marginRight: "auto"
+    marginLeft: "auto !important",
+    marginRight: "auto !important"
   }
 });
 
