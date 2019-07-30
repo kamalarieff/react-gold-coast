@@ -129,10 +129,20 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
         }
       `}
     >
-      {({ data, loading, error }) => {
+      {({ data, client }) => {
+        const { me } = client.readQuery({
+          query: gql`
+            {
+              me {
+                id
+              }
+            }
+          `
+        });
+        const newData = data.users.filter(user => user.id !== me.id);
         return (
           <FormGroup row>
-            {data.users.map(user => (
+            {newData.map(user => (
               <FormControlLabel
                 key={user.id}
                 control={
