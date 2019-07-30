@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
@@ -11,6 +12,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
+import styled from "@emotion/styled";
 
 const ADD_EXPENSE = gql`
   mutation(
@@ -103,6 +105,7 @@ const ValueTextField = React.memo(({ value, changeHandler }) => {
       variant="outlined"
       value={value}
       onChange={handleChange}
+      fullWidth
     />
   );
 });
@@ -176,18 +179,43 @@ const SubmitButton = React.memo(({ clickHandler, error, loading }) => {
   );
 });
 
+const ValueContainer = styled.div`
+  display: flex;
+  & > div {
+    margin: 0;
+  }
+`;
+
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    maxWidth: "30em",
+    marginLeft: "auto",
+    marginRight: "auto"
+  }
+});
+
 const Add = () => {
   const [item, setItem] = useState("");
   const [value, setValue] = useState("");
   const [currency, setCurrency] = useState("RM");
   const [sharedWith, setSharedWith] = useState([]);
 
+  const classes = useStyles();
+
   return (
-    <Container>
-      <form noValidate autoComplete="off">
+    <Container className={classes.root}>
+      <form
+        noValidate
+        autoComplete="off"
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         <ItemTextField item={item} changeHandler={setItem} />
-        <CurrencySelector currency={currency} changeHandler={setCurrency} />
-        <ValueTextField value={value} changeHandler={setValue} />
+        <ValueContainer>
+          <CurrencySelector currency={currency} changeHandler={setCurrency} />
+          <ValueTextField value={value} changeHandler={setValue} />
+        </ValueContainer>
         <UsersCheckbox sharedWith={sharedWith} changeHandler={setSharedWith} />
         <Mutation
           mutation={ADD_EXPENSE}
