@@ -9,9 +9,7 @@ import Home from "./Home";
 import Login from "./Login";
 import Header from "./Header";
 import { ExpensePage } from "./components/Expense";
-
 import { Query } from "react-apollo";
-
 import gql from "graphql-tag";
 
 const GET_LOGGED_IN_STATUS = gql`
@@ -48,6 +46,7 @@ function App() {
   return (
     <Router>
       <div>
+        <FetchQueries />
         <Header />
         <Switch>
           <ProtectedRoute exact path="/" component={Home} />
@@ -58,5 +57,58 @@ function App() {
     </Router>
   );
 }
+
+const FetchQueries = () => (
+  <Query
+    fetchPolicy="network-only"
+    query={gql`
+      query {
+        users {
+          id
+          username
+        }
+        expenses {
+          id
+          item
+          value
+          sharedWith {
+            id
+            username
+          }
+          currency
+          createdAt
+          user {
+            id
+            username
+          }
+        }
+      }
+    `}
+  >
+    {({ data, client }) => {
+      client.writeQuery({
+        query: gql`
+          query {
+            MyExpenses @client {
+              id
+              item
+              value
+              currency
+              createdAt
+              sharedWith {
+                id
+                username
+              }
+            }
+          }
+        `,
+        data: {
+          MyExpenses: data.expenses
+        }
+      });
+      return <></>;
+    }}
+  </Query>
+);
 
 export default App;
