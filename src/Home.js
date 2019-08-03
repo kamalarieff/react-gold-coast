@@ -5,6 +5,7 @@ import Overview from "./modules/overview";
 import Itenary from "./Itenary";
 import Budget from "./Budget";
 import { ExpenseCard as Expenses } from "./components/Expense";
+import { StaticDataProvider } from "./context";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -20,11 +21,13 @@ const Container = styled.div`
 function Home() {
   return (
     <Container>
-      <Overview />
-      <Users />
-      <Itenary />
-      <Budget />
-      <Expenses />
+      <StaticDataProvider>
+        <Overview />
+        <Users />
+        <Itenary />
+        <Budget />
+        <Expenses />
+      </StaticDataProvider>
     </Container>
   );
 }
