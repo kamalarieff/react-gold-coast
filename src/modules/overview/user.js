@@ -2,9 +2,8 @@ import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
 import * as R from "ramda";
+import { StyledPaper } from "./index";
 
 const GET_USERS = gql`
   {
@@ -26,18 +25,10 @@ const Overview = () => (
         R.length
       )(users);
       return (
-        <Paper>
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            p={1}
-          >
-            <Typography variant="body1">Users Confirmed</Typography>
-            <Typography variant="body2">{confirmedUsers}</Typography>
-          </Box>
-        </Paper>
+        <StyledPaper>
+          <Typography variant="body1">Users Confirmed</Typography>
+          <Typography variant="body2">{confirmedUsers}</Typography>
+        </StyledPaper>
       );
     }}
   </Query>
