@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Users from "./User";
+import Users, { UserOverview } from "./User";
 import Itenary from "./Itenary";
 import Budget from "./Budget";
 import { ExpenseCard as Expenses } from "./components/Expense";
@@ -20,6 +20,7 @@ function Home() {
   return (
     <Container>
       <Users />
+      <UserOverview />
       <Itenary />
       <Budget />
       <Expenses />
