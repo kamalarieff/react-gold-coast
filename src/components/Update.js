@@ -2,6 +2,7 @@ import React, { useState, useContext, createContext } from "react";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import { makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -119,6 +120,12 @@ const GET_MY_EXPENSES = gql`
   }
 `;
 
+const DELETE_EXPENSE = gql`
+  mutation($id: ID!) {
+    deleteExpense(id: $id)
+  }
+`;
+
 const SubmitButton = React.memo(({ item, value, currency, sharedWith }) => {
   const { id, closeModal } = useContext(UpdateContext);
   return (
@@ -167,9 +174,46 @@ const SubmitButton = React.memo(({ item, value, currency, sharedWith }) => {
   );
 });
 
+const DeleteButton = () => {
+  const { id, closeModal } = useContext(UpdateContext);
+  return (
+    <Mutation
+      mutation={DELETE_EXPENSE}
+      variables={{ id }}
+      refetchQueries={[
+        {
+          query: GET_EXPENSES
+        },
+        {
+          query: GET_MY_EXPENSES
+        }
+      ]}
+      onCompleted={closeModal}
+    >
+      {(deleteExpense, { loading, error }) => {
+        if (loading) return <CircularProgress />;
+
+        return (
+          <>
+            <Button variant="contained" color="primary" onClick={deleteExpense}>
+              Delete
+            </Button>
+            {error && <p>Failed to delete ...</p>}
+          </>
+        );
+      }}
+    </Mutation>
+  );
+};
+
 const useStyles = makeStyles({
   appBar: {
     position: "relative"
+  },
+  buttons: {
+    "& > button:not(:last-child)": {
+      margin: "0 1em"
+    }
   }
 });
 
@@ -206,7 +250,16 @@ const Update = () => {
         curCurrency={curCurrency}
         curSharedWith={curSharedWith}
       >
-        {({ ...props }) => <SubmitButton {...props} />}
+        {({ ...props }) => (
+          <Box
+            className={classes.buttons}
+            display="flex"
+            justifyContent="flex-end"
+          >
+            <SubmitButton {...props} />
+            <DeleteButton {...props} />
+          </Box>
+        )}
       </Form>
     </Dialog>
   );
