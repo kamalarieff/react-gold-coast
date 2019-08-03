@@ -13,6 +13,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import styled from "@emotion/styled";
+import * as R from "ramda";
 
 const ADD_EXPENSE = gql`
   mutation(
@@ -127,6 +128,7 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
           users {
             id
             username
+            purchaseFlightTicket
           }
         }
       `}
@@ -141,7 +143,14 @@ const UsersCheckbox = React.memo(({ sharedWith, changeHandler }) => {
             }
           `
         });
-        const usersWithoutMe = data.users.filter(user => user.id !== me.id);
+        const meUser = ({ id }) => id === me.id;
+        const confirmedUsers = ({ purchaseFlightTicket }) =>
+          purchaseFlightTicket === true;
+        const getConfirmedUsersWithoutMe = R.pipe(
+          R.filter(confirmedUsers),
+          R.reject(meUser)
+        );
+        const usersWithoutMe = getConfirmedUsersWithoutMe(data.users);
 
         return (
           <FormGroup row>
