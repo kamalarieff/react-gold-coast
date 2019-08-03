@@ -38,7 +38,7 @@ const Login = props => {
       />
       <Mutation
         mutation={LOGIN}
-        variables={{ username }}
+        variables={{ username: username.toLowerCase() }}
         update={(client, { data: { signIn } }) => {
           localStorage.setItem("token", signIn.token);
           client.writeData({
