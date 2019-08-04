@@ -18,7 +18,6 @@ const GET_USERS = gql`
 const Overview = () => (
   <Query query={GET_USERS}>
     {({ data }) => {
-      console.log("TCL: data", data);
       const isConfirmed = ({ purchaseFlightTicket }) =>
         purchaseFlightTicket === true;
       const confirmedUsers = R.pipe(
