@@ -113,7 +113,10 @@ const Budget = () => {
         );
 
         const dividePerPerson = R.when(
-          R.propEq("name", "accomodation"),
+          R.propSatisfies(
+            name => name == "accomodation" || name == "fuel",
+            "name"
+          ),
           R.evolve({
             data: {
               value: R.divide(R.__, confirmedUsersCount)

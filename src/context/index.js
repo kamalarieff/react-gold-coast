@@ -68,8 +68,8 @@ export const StaticDataProvider = props => {
     {
       name: "fuel",
       data: {
-        value: 72.23,
-        currency: "RM",
+        value: 200,
+        currency: "AUD",
         url: []
       }
     }
