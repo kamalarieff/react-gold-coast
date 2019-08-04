@@ -52,10 +52,11 @@ const GET_MY_EXPENSES = gql`
 
 export const ExpenseCard = () => (
   <Query query={GET_EXPENSES}>
-    {({ data, loading, error }) => (
+    {({ data, loading, error, refetch }) => (
       <Card
-        overflow
+        overflow="true"
         title="Expenses"
+        action={<button onClick={() => refetch()}>Refetch</button>}
         render={() => (
           <Table>
             <TableHead>
@@ -136,13 +137,14 @@ const useStyles = makeStyles({
 
 const MyExpenses = () => (
   <Query query={GET_MY_EXPENSES} displayName="Singsing">
-    {({ data, loading, error }) => {
+    {({ data, loading, error, refetch }) => {
       return error ? (
         <div>Error: {error}</div>
       ) : (
         <Card
-          overflow
+          overflow="true"
           title="My Expenses"
+          action={<button onClick={() => refetch()}>Refetch</button>}
           render={() => (
             <Table>
               <TableHead>
