@@ -7,7 +7,7 @@ import { StaticDataContext } from "../../context";
 
 const Overview = () => {
   const { store } = useContext(StaticDataContext);
-  const getAccomodation = R.find(R.propEq("name", "Accomodation"));
+  const getAccomodation = R.find(R.propEq("name", "accomodation"));
   const getUrl = R.path(["data", "url"]);
   const getTitle = R.path(["data", "title"]);
 

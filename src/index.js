@@ -75,6 +75,36 @@ const client = new ApolloClient({
   }
 });
 
+export const GET_EXPENSES = gql`
+  {
+    expenses {
+      id
+      item
+      value
+      sharedWith {
+        id
+        username
+      }
+      currency
+      createdAt
+      user {
+        id
+        username
+      }
+    }
+  }
+`;
+
+export const GET_USERS = gql`
+  {
+    users {
+      id
+      username
+      purchaseFlightTicket
+    }
+  }
+`;
+
 client.query({
   query: gql`
     {

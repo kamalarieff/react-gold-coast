@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Query } from "react-apollo";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -6,6 +7,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import * as R from "ramda";
 import Card from "./hoc/Card";
+import { StaticDataContext } from "./context";
+import { GET_USERS } from "./index";
 
 const budget = [
   {
@@ -88,24 +91,69 @@ const TotalRow = () => (
   </TableRow>
 );
 
-const Budget = () => (
-  <Card
-    title="Budget"
-    render={() => (
-      <Table>
-        <TableHeader />
-        <TableBody>
-          {R.map(x => (
-            <TableRow key={x.name}>
-              <TableCell>{x.name}</TableCell>
-              <TableCell>RM {x.value}</TableCell>
-            </TableRow>
-          ))(budgetInRM)}
-          <TotalRow />
-        </TableBody>
-      </Table>
-    )}
-  />
-);
+const Budget = () => {
+  const { store } = useContext(StaticDataContext);
+  console.log("TCL: Budget -> store", store);
+  return (
+    <Query query={GET_USERS}>
+      {({ data: { users } }) => {
+        const confirmedUsersCount = R.pipe(
+          R.filter(({ purchaseFlightTicket }) => purchaseFlightTicket === true),
+          R.length
+        )(users);
+
+        const convertToRM = R.when(
+          R.pathEq(["data", "currency"], "AUD"),
+          R.evolve({
+            data: {
+              value: R.multiply(currencyExchange),
+              currency: R.replace("AUD", "RM")
+            }
+          })
+        );
+
+        const dividePerPerson = R.when(
+          R.propEq("name", "accomodation"),
+          R.evolve({
+            data: {
+              value: R.divide(R.__, confirmedUsersCount)
+            }
+          })
+        );
+
+        console.log(
+          "convertToRM",
+          R.map(
+            R.pipe(
+              convertToRM,
+              dividePerPerson
+            )
+          )(store)
+        );
+        return <p>Test</p>;
+      }}
+    </Query>
+  );
+
+  return (
+    <Card
+      title="Budget"
+      render={() => (
+        <Table>
+          <TableHeader />
+          <TableBody>
+            {R.map(x => (
+              <TableRow key={x.name}>
+                <TableCell>{x.name}</TableCell>
+                <TableCell>RM {x.value}</TableCell>
+              </TableRow>
+            ))(budgetInRM)}
+            <TotalRow />
+          </TableBody>
+        </Table>
+      )}
+    />
+  );
+};
 
 export default Budget;
