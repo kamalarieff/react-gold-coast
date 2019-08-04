@@ -60,9 +60,11 @@ export const StaticDataProvider = props => {
     {
       name: "car rental",
       data: {
-        value: 115.48,
-        currency: "RM",
-        url: []
+        value: 423.96,
+        currency: "AUD",
+        url: [
+          "https://booking.vroomvroomvroom.com.au/au/booking/2019-10-13/10:00/2019-10-19/10:00/OOLT72/OOLT72/-28.1665017373528,153.512455490799,1/-28.1665017373528,153.512455490799,1/Gold%20Coast%20Airport,%20Queensland,%20Australia/Gold%20Coast%20Airport,%20Queensland,%20Australia/MY/26/AL/SFAR?rateID=AM6AU&radius=5"
+        ]
       }
     },
     {

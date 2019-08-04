@@ -114,7 +114,8 @@ const Budget = () => {
 
         const dividePerPerson = R.when(
           R.propSatisfies(
-            name => name == "accomodation" || name == "fuel",
+            name =>
+              name == "accomodation" || name == "fuel" || name == "car rental",
             "name"
           ),
           R.evolve({
