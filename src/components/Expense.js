@@ -37,75 +37,81 @@ const GET_EXPENSES = gql`
 
 export const ExpenseCard = () => (
   <Query query={GET_EXPENSES}>
-    {({ data, loading, error, refetch }) => (
-      <Card
-        overflow="true"
-        title="Expenses"
-        action={<button onClick={() => refetch()}>Refetch</button>}
-        render={() => (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography variant="body1">Time</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">User</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">Shared With</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">Item</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">Value</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            {!loading ? (
-              data.expenses.map(expense => (
-                <React.Fragment key={expense.id}>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {DateTime.fromISO(expense.createdAt).toFormat(
-                            "dd LLL hh:mm a"
-                          )}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {expense.user.username}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        {expense.sharedWith.map(user => (
-                          <Typography key={user.id} variant="body1">
-                            {user.username}
+    {({ data, loading, error, refetch }) => {
+      const byId = R.descend(R.prop("id"));
+      const expenses = R.sort(byId, data.expenses);
+      return (
+        <Card
+          overflow="true"
+          title="Expenses"
+          action={<button onClick={() => refetch()}>Refetch</button>}
+          render={() => (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="body1">Time</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1">User</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1">Shared With</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1">Item</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body1">Value</Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              {!loading ? (
+                expenses.map(expense => (
+                  <React.Fragment key={expense.id}>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant="body1">
+                            {DateTime.fromISO(expense.createdAt).toFormat(
+                              "dd LLL hh:mm a"
+                            )}
                           </Typography>
-                        ))}
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{expense.item}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {expense.currency} {expense.value}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </React.Fragment>
-              ))
-            ) : (
-              <p>Loading ...</p>
-            )}
-          </Table>
-        )}
-      />
-    )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            {expense.user.username}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {expense.sharedWith.map(user => (
+                            <Typography key={user.id} variant="body1">
+                              {user.username}
+                            </Typography>
+                          ))}
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            {expense.item}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body1">
+                            {expense.currency} {expense.value}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </React.Fragment>
+                ))
+              ) : (
+                <p>Loading ...</p>
+              )}
+            </Table>
+          )}
+        />
+      );
+    }}
   </Query>
 );
 
