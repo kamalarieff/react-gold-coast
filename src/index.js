@@ -93,6 +93,7 @@ client.query({
         }
         currency
         createdAt
+        updatedAt
         user {
           id
           username
