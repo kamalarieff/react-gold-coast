@@ -46,7 +46,6 @@ function App() {
   return (
     <Router>
       <div>
-        <FetchQueries />
         <Header />
         <Switch>
           <ProtectedRoute exact path="/" component={Home} />

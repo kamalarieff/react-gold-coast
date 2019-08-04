@@ -127,6 +127,34 @@ const client = new ApolloClient({
   }
 });
 
+client.query({
+  query: gql`
+    {
+      users {
+        id
+        username
+        purchaseFlightTicket
+      }
+      expenses {
+        id
+        item
+        value
+        sharedWith {
+          id
+          username
+        }
+        currency
+        createdAt
+        user {
+          id
+          username
+        }
+      }
+    }
+  `,
+  fetchPolicy: "network-only"
+});
+
 // persistCache({
 //   cache,
 //   storage: window.localStorage,
