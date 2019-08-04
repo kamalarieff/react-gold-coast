@@ -5,6 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import Card from "../../hoc/Card";
 import UserOverview from "./user";
 import AccomodationOverview from "./accommodation";
+import CarRentalOverview from "./car";
 
 const Grid = styled.div`
   display: grid;
@@ -19,6 +20,7 @@ const Overview = () => (
       <Grid>
         <UserOverview />
         <AccomodationOverview />
+        <CarRentalOverview />
       </Grid>
     )}
   />
