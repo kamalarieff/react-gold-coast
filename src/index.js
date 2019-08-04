@@ -64,64 +64,12 @@ const client = new ApolloClient({
       }
     },
     Query: {
-      users: (_root, variables, { cache, getCacheKey }) => {
-        // const temp = gql`
-        //   {
-        //     users {
-        //       id
-        //     }
-        //   }
-        // `;
-        // console.log("TCL: getCacheKey", getCacheKey);
-        // console.log("TCL: cache", cache.readQuery({ query: temp }));
-        // console.log("TCL: variables", variables);
-        // console.log("TCL: _root", _root);
-        // return null;
-      },
       isLoggedIn: (_root, variables, { cache, getCacheKey }) => {
         console.log("TCL: getCacheKey", getCacheKey);
         console.log("TCL: cache", cache);
         console.log("TCL: variables", variables);
         console.log("TCL: _root", _root);
         return null;
-      },
-      MyExpenses: (_root, _, { cache }) => {
-        try {
-          const { me } = cache.readQuery({
-            query: gql`
-              query {
-                me {
-                  id
-                  username
-                }
-              }
-            `
-          });
-          const { expenses } = cache.readQuery({
-            query: gql`
-              query {
-                expenses {
-                  id
-                  item
-                  value
-                  currency
-                  createdAt
-                  sharedWith {
-                    id
-                    username
-                  }
-                  user {
-                    id
-                    username
-                  }
-                }
-              }
-            `
-          });
-          return expenses.filter(expense => expense.user.id === me.id);
-        } catch (e) {
-          console.log("TCL: e", e);
-        }
       }
     }
   }

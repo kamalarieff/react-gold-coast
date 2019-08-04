@@ -108,18 +108,6 @@ const GET_EXPENSES = gql`
   }
 `;
 
-const GET_MY_EXPENSES = gql`
-  query {
-    MyExpenses @client {
-      id
-      item
-      value
-      currency
-      createdAt
-    }
-  }
-`;
-
 const DELETE_EXPENSE = gql`
   mutation($id: ID!) {
     deleteExpense(id: $id)
@@ -135,9 +123,6 @@ const SubmitButton = React.memo(({ item, value, currency, sharedWith }) => {
       refetchQueries={[
         {
           query: GET_EXPENSES
-        },
-        {
-          query: GET_MY_EXPENSES
         }
       ]}
       update={(cache, { data: { updateExpense } }) => {
@@ -183,9 +168,6 @@ const DeleteButton = () => {
       refetchQueries={[
         {
           query: GET_EXPENSES
-        },
-        {
-          query: GET_MY_EXPENSES
         }
       ]}
       onCompleted={closeModal}

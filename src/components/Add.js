@@ -61,18 +61,6 @@ const GET_EXPENSES = gql`
   }
 `;
 
-const GET_MY_EXPENSES = gql`
-  query {
-    MyExpenses @client {
-      id
-      item
-      value
-      currency
-      createdAt
-    }
-  }
-`;
-
 const ItemTextField = React.memo(({ item, changeHandler }) => {
   const handleChange = e => changeHandler(e.target.value);
   return (
@@ -232,9 +220,6 @@ const Add = () => {
           refetchQueries={[
             {
               query: GET_EXPENSES
-            },
-            {
-              query: GET_MY_EXPENSES
             }
           ]}
           update={(cache, { data: { addExpense } }) => {

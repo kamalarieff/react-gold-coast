@@ -10,6 +10,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { DateTime } from "luxon";
+import * as R from "ramda";
 import Card from "../hoc/Card";
 import ExpenseAdd from "./Add";
 import ExpenseUpdate, { UpdateProvider, UpdateButton } from "./Update";
@@ -27,22 +28,6 @@ const GET_EXPENSES = gql`
       currency
       createdAt
       user {
-        id
-        username
-      }
-    }
-  }
-`;
-
-const GET_MY_EXPENSES = gql`
-  query {
-    MyExpenses @client {
-      id
-      item
-      value
-      currency
-      createdAt
-      sharedWith {
         id
         username
       }
@@ -136,8 +121,24 @@ const useStyles = makeStyles({
 });
 
 const MyExpenses = () => (
-  <Query query={GET_MY_EXPENSES} displayName="Singsing">
-    {({ data, loading, error, refetch }) => {
+  <Query query={GET_EXPENSES} displayName="MyExpenses">
+    {({ data: { expenses }, loading, error, refetch, client }) => {
+      const { me } = client.readQuery({
+        query: gql`
+          {
+            me {
+              id
+            }
+          }
+        `
+      });
+      const meUser = R.pathEq(["user", "id"], me.id);
+      const byId = R.descend(R.prop("id"));
+      const getMyExpenses = R.pipe(
+        R.filter(meUser),
+        R.sort(byId)
+      );
+      const myExpenses = getMyExpenses(expenses);
       return error ? (
         <div>Error: {error}</div>
       ) : (
@@ -165,7 +166,7 @@ const MyExpenses = () => (
                 </TableRow>
               </TableHead>
               {!loading ? (
-                data.MyExpenses.map(expense => (
+                myExpenses.map(expense => (
                   <React.Fragment key={expense.id}>
                     <TableBody>
                       <TableRow>
