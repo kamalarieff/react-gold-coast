@@ -17,7 +17,7 @@ const Overview = () => {
 
   return (
     <StyledPaper>
-      <Typography variant="body1">Accomodation</Typography>
+      <Typography variant="body1">Accommodation</Typography>
       <Typography variant="body2">
         <Link href={url} target="_blank" rel="noopener noreferrer">
           {title}
