@@ -17,14 +17,14 @@ const GET_USERS = gql`
 
 const Overview = () => (
   <Query query={GET_USERS}>
-    {({ data: { users } }) => {
-      console.log("TCL: users", users);
+    {({ data }) => {
+      console.log("TCL: data", data);
       const isConfirmed = ({ purchaseFlightTicket }) =>
         purchaseFlightTicket === true;
       const confirmedUsers = R.pipe(
         R.filter(isConfirmed),
         R.length
-      )(users);
+      )(data.users);
       return (
         <StyledPaper>
           <Typography variant="body1">Users Confirmed</Typography>
