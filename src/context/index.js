@@ -5,7 +5,7 @@ export const StaticDataContext = createContext();
 export const StaticDataProvider = props => {
   const store = [
     {
-      name: "accomodation",
+      name: "accommodation",
       data: {
         value: 1460,
         currency: "AUD",

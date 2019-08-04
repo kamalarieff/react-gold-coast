@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Card from "../../hoc/Card";
 import UserOverview from "./user";
-import AccomodationOverview from "./accomodation";
+import AccomodationOverview from "./accommodation";
 
 const Grid = styled.div`
   display: grid;
