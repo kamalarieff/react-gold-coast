@@ -12,6 +12,7 @@ import Icon from "@mdi/react";
 import { mdiCloseCircle, mdiCheckCircle } from "@mdi/js";
 import Card from "./hoc/Card";
 import Button from "@material-ui/core/Button";
+import * as R from "ramda";
 
 const GET_USERS = gql`
   {
@@ -88,40 +89,44 @@ const UpdateFlightStatus = (
 
 const Users = () => (
   <Query query={GET_USERS}>
-    {({ data, loading, error }) => (
-      <Card
-        title="Users"
-        action={UpdateFlightStatus}
-        render={() => (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography variant="body1">Name</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant="body1">Flight ticket</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            {!loading ? (
-              data.users.map(user => (
-                <React.Fragment key={user.id}>
-                  <TableBody>
-                    <UserItem
-                      username={user.username}
-                      isFlightTicketPurchased={user.purchaseFlightTicket}
-                    />
-                  </TableBody>
-                </React.Fragment>
-              ))
-            ) : (
-              <p>Loading ...</p>
-            )}
-          </Table>
-        )}
-      />
-    )}
+    {({ data: { users }, loading, error }) => {
+      const byStatus = R.descend(R.prop("purchaseFlightTicket"));
+      const sortedUsers = R.sort(byStatus)(users);
+      return (
+        <Card
+          title="People"
+          action={UpdateFlightStatus}
+          render={() => (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="body1">Name</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body1">Flight ticket</Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              {!loading ? (
+                sortedUsers.map(user => (
+                  <React.Fragment key={user.id}>
+                    <TableBody>
+                      <UserItem
+                        username={user.username}
+                        isFlightTicketPurchased={user.purchaseFlightTicket}
+                      />
+                    </TableBody>
+                  </React.Fragment>
+                ))
+              ) : (
+                <p>Loading ...</p>
+              )}
+            </Table>
+          )}
+        />
+      );
+    }}
   </Query>
 );
 
