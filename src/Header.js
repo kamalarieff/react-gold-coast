@@ -41,6 +41,11 @@ const Header = () => {
               text: "Expenses",
               path: "/expenses",
               icon: <Icon path={mdiSquareIncCash} size={1} color="black" />
+            },
+            {
+              text: "Todos",
+              path: "/todos",
+              icon: <Icon path={mdiSquareIncCash} size={1} color="black" />
             }
           ].map(item => (
             <ListItem button key={item.text}>

@@ -105,6 +105,26 @@ export const GET_USERS = gql`
   }
 `;
 
+export const GET_TODOS = gql`
+  {
+    todos {
+      id
+      item
+      additionalDetails
+    }
+  }
+`;
+
+export const GET_USER_TODOS = gql`
+  {
+    userTodos {
+      id
+      userId
+      todoId
+    }
+  }
+`;
+
 client.query({
   query: gql`
     {
@@ -128,6 +148,16 @@ client.query({
           id
           username
         }
+      }
+      todos {
+        id
+        item
+        additionalDetails
+      }
+      userTodos {
+        id
+        userId
+        todoId
       }
     }
   `,

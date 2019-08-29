@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import Users from "./User";
 import Overview from "./modules/overview";
+import Todo from "./modules/todo";
 import Itenary from "./Itenary";
 import Budget from "./Budget";
 import { ExpenseCard as Expenses } from "./components/Expense";
@@ -22,6 +23,7 @@ function Home() {
   return (
     <Container>
       <StaticDataProvider>
+        <Todo />
         <Overview />
         <Users />
         <Itenary />
