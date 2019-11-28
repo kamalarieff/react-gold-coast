@@ -9,7 +9,8 @@ import Home from "./Home";
 import Login from "./Login";
 import Header from "./Header";
 import { ExpensePage } from "./components/Expense";
-import { Page as TodoPage } from "./modules/todo";
+// import { Page as TodoPage } from "./modules/todo";
+import ReportPage from "./modules/report";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -51,7 +52,8 @@ function App() {
         <Switch>
           <ProtectedRoute exact path="/" component={Home} />
           <ProtectedRoute path="/expenses" component={ExpensePage} />
-          <ProtectedRoute path="/todos" component={TodoPage} />
+          {/* <ProtectedRoute path="/todos" component={TodoPage} /> */}
+          <ProtectedRoute path="/report" component={ReportPage} />
           <Route path="/login" component={Login} />
         </Switch>
       </div>
