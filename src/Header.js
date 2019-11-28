@@ -9,7 +9,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Icon from "@mdi/react";
-import { mdiMenu, mdiHome, mdiSquareIncCash } from "@mdi/js";
+import { mdiMenu, mdiHome, mdiSquareIncCash, mdiClipboardText } from "@mdi/js";
 
 const Header = () => {
   const [open, setOpen] = React.useState(false);
@@ -46,6 +46,11 @@ const Header = () => {
               text: "Todos",
               path: "/todos",
               icon: <Icon path={mdiSquareIncCash} size={1} color="black" />
+            },
+            {
+              text: "Report",
+              path: "/report",
+              icon: <Icon path={mdiClipboardText} size={1} color="black" />
             }
           ].map(item => (
             <ListItem button key={item.text}>
