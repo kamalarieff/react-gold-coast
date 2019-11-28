@@ -83,12 +83,16 @@ const Report = () => {
   const filteredHaveToGet = filterOwnerMustGet(username)(ownerMustGetArray);
   console.log("TCL: Report -> filteredHaveToGet", filteredHaveToGet);
 
-  const totalPerUser = R.pipe(
-    R.groupBy(i => i.from.username),
-    R.map(x => x.reduce((acc, cur) => acc + cur.value, 0)),
-    R.toPairs
-  )(filteredHaveToGet);
-  console.log("TCL: Report -> totalPerUser", totalPerUser);
+  const getTotal = R.curry((array, path) =>
+    R.pipe(
+      R.groupBy(R.path(path)),
+      R.map(x => x.reduce((acc, cur) => acc + cur.value, 0)),
+      R.toPairs
+    )(array)
+  );
+
+  const totalNeedToPay = getTotal(filteredHasToPay)(["receiver", "username"]);
+  const totalNeedToReceive = getTotal(filteredHaveToGet)(["from", "username"]);
 
   return (
     <Box>
@@ -102,12 +106,17 @@ const Report = () => {
         </Select>
       </FormControl>
       <Typography variant="h1">Report</Typography>
-      {filteredHasToPay.map(i => (
+      {/* {filteredHasToPay.map(i => (
         <p>
           {username} has to pay {i.receiver.username} {i.value}
         </p>
+      ))} */}
+      {totalNeedToPay.map(i => (
+        <p>
+          {username} has to pay {i[0]} a total amount of {i[1]}
+        </p>
       ))}
-      {totalPerUser.map(i => (
+      {totalNeedToReceive.map(i => (
         <p>
           {username} has to get from {i[0]} a total amount of {i[1]}
         </p>
