@@ -3,8 +3,11 @@ import * as R from "ramda";
 import { useQuery } from "@apollo/react-hooks";
 import Box from "@material-ui/core/Box";
 import { Typography, List } from "@material-ui/core";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
-import { GET_EXPENSES } from "../../index";
+import { GET_EXPENSES, GET_USERS } from "../../index";
 
 const Report = () => {
   const {
@@ -12,6 +15,19 @@ const Report = () => {
     error,
     data: { expenses }
   } = useQuery(GET_EXPENSES);
+
+  const {
+    loading: userLoading,
+    error: userError,
+    data: { users }
+  } = useQuery(GET_USERS);
+
+  const [user, setUser] = React.useState(users[0]);
+
+  const handleChange = e => {
+    const res = users.find(user => user.id === e.target.value);
+    setUser(res);
+  };
 
   const res = expenses.map(expense => {
     const value = expense.value;
@@ -59,7 +75,7 @@ const Report = () => {
     R.filter(R.pathEq([type, "username"], username))
   );
 
-  const username = "sheldon";
+  const username = user.username;
   const filterHasToPay = fiterByUsername("payee");
   const filterOwnerMustGet = fiterByUsername("owner");
   const filteredHasToPay = filterHasToPay(username)(toPayArray);
@@ -76,6 +92,15 @@ const Report = () => {
 
   return (
     <Box>
+      <FormControl>
+        <Select value={user.id} onChange={handleChange}>
+          {users.map(user => (
+            <MenuItem key={user.id} value={user.id}>
+              {user.username}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Typography variant="h1">Report</Typography>
       {filteredHasToPay.map(i => (
         <p>
