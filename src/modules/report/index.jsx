@@ -21,8 +21,10 @@ const Report = () => {
   const {
     loading: userLoading,
     error: userError,
-    data: { users }
+    data: { users: allUsers }
   } = useQuery(GET_USERS);
+
+  const users = R.reject(R.propEq("purchaseFlightTicket", false))(allUsers);
 
   const [user, setUser] = React.useState(users[0]);
 
