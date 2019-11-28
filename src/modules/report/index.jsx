@@ -9,6 +9,8 @@ import Select from "@material-ui/core/Select";
 
 import { GET_EXPENSES, GET_USERS } from "../../index";
 
+const currencyExchange = 2.89;
+
 const Report = () => {
   const {
     loading,
@@ -30,7 +32,10 @@ const Report = () => {
   };
 
   const res = expenses.map(expense => {
-    const value = expense.value;
+    const value =
+      expense.currency === "AUD"
+        ? expense.value * currencyExchange
+        : expense.value;
     const owner = expense.user;
     const sharedWithCount = expense.sharedWith.length;
     const totalUsers = sharedWithCount + 1;
@@ -113,12 +118,12 @@ const Report = () => {
       ))} */}
       {totalNeedToPay.map(i => (
         <p>
-          {username} has to pay {i[0]} a total amount of {i[1]}
+          {username} has to pay RM {i[0]} a total amount of {i[1]}
         </p>
       ))}
       {totalNeedToReceive.map(i => (
         <p>
-          {username} has to get from {i[0]} a total amount of {i[1]}
+          {username} has to get from {i[0]} a total amount of RM {i[1]}
         </p>
       ))}
     </Box>
